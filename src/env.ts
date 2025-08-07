@@ -15,10 +15,13 @@ const env = cleanEnv(process.env, {
 });
 
 const configs = Object.freeze({
+    DB_NAME: "BetopiaCloud",
+    APP_NAME: "BetopiaCloud",
     MONGO_URI: env.MONGO_URI,
     PORT: env.PORT,
     NODE_ENV: env.NODE_ENV,
     JWT_SECRET: env.JWT_SECRET,
+    LOG_LEVEL: "dev",
 });
 
 export default configs;

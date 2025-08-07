@@ -1,12 +1,15 @@
 // Emoji favicon route
 
+import cookieParser from "cookie-parser";
 import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
 import helmet from "helmet";
 import morgan from "morgan";
+import { connectToDatabase } from "./db";
+import configs from "./env";
+import { errorMiddleware } from "./middlewares/error.middleware";
 import routerV1 from "./routers/router.v1";
-
 dotenv.config();
 
 const app = express();
@@ -18,9 +21,15 @@ app.get("/favicon.ico", (req, res) => {
 });
 
 app.use(express.json());
-app.use(cors());
+app.use(
+    cors({
+        origin: ["http://localhost:3000"],
+        credentials: true,
+    })
+);
 app.use(helmet());
 app.use(morgan("dev"));
+app.use(cookieParser());
 
 // Emoji favicon route
 app.get("/favicon.ico", (req, res) => {
@@ -37,8 +46,14 @@ app.use((req, res) => {
     res.status(404).json({ message: "Route not found" });
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-    console.log(`Access the API at http://localhost:${PORT}/api/v1`);
-});
+app.use(errorMiddleware);
+
+const PORT = configs.PORT;
+
+(async () => {
+    await connectToDatabase();
+    app.listen(PORT, () => {
+        console.log(`Server running on port ${PORT}`);
+        console.log(`Access the API at http://localhost:${PORT}/api/v1`);
+    });
+})();
