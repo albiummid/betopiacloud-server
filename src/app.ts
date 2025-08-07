@@ -23,7 +23,7 @@ app.get("/favicon.ico", (req, res) => {
 app.use(express.json());
 app.use(
     cors({
-        origin: ["http://localhost:3000"],
+        origin: ["http://localhost:3000", "http://103.138.150.141:3000"],
         credentials: true,
     })
 );
